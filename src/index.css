@@ -67,3 +67,49 @@ h1 {
     color: #bbb;
     /* 较浅的文字颜色 */
 }
+
+.app {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.network-info {
+    margin-bottom: 20px;
+}
+
+.network-info h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.base-fee {
+    font-size: 18px;
+}
+
+.fee-blocks {
+    display: flex;
+    gap: 10px;
+}
+
+.fee-block {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.priority,
+.max,
+.probability {
+    margin: 5px 0;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #2196F3, #21CBF3, #64B5F6, #42A5F5, #1976D2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}

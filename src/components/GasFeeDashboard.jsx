@@ -3,8 +3,9 @@ import { Row, Col } from 'antd';
 import GasFeeCard from './GasFeeCard';
 import CurrentPriceCard from './CurrentPriceCard';
 import { getCurrentGasFee } from '../service/gasFeeService';
+import NetworkInfo from './NetworkInfoCard';
 
-const GasFeeDashboard = ({ chainName ,chainGasFeeServiceAPI, chainPriceAPI}) => {
+const GasFeeDashboard = ({ chainName ,chainGasFeeServiceAPI, chainPriceAPI, chainNetworkId}) => {
   console.log("chain", chainName);
   console.log("chain.gasFeeServiceAPI", chainGasFeeServiceAPI);
   const [gasFee, setGasFee] = useState(null);
@@ -13,7 +14,9 @@ const GasFeeDashboard = ({ chainName ,chainGasFeeServiceAPI, chainPriceAPI}) => 
     const fetchGasFee = async () => {
       try {
         console.log("chain.gasFeeServiceAPI", chainGasFeeServiceAPI);
-        const data = await getCurrentGasFee(chainGasFeeServiceAPI);
+        console.log("chian.networkID",chainNetworkId);
+        const request = chainGasFeeServiceAPI+chainNetworkId;
+        const data = await getCurrentGasFee(request);
         console.log('Fetched gas fee data:', data);
         setGasFee(data);
       } catch (error) {
@@ -23,7 +26,7 @@ const GasFeeDashboard = ({ chainName ,chainGasFeeServiceAPI, chainPriceAPI}) => 
 
     fetchGasFee();
 
-    const interval = setInterval(fetchGasFee, 6000);
+    const interval = setInterval(fetchGasFee, 30000);
 
     return () => clearInterval(interval);
   }, [chainGasFeeServiceAPI]);
@@ -32,48 +35,67 @@ const GasFeeDashboard = ({ chainName ,chainGasFeeServiceAPI, chainPriceAPI}) => 
     return <p>Loading...</p>;
   }
 
+  const baseFee = parseFloat(gasFee.blockPrices[0].baseFeePerGas).toFixed(6);
+
   return (
     <div style={{ padding: '20px' }}>
-      <Row gutter={16}>
-        <Col span={6}>
+      <Row style={{ marginTop: '20px' }} justify="center">
+        <NetworkInfo chainName = {chainName} baseFee ={baseFee} blockNumber ={gasFee.blockPrices[0].blockNumber}/>
+      </Row>
+      <Row gutter={20} justify="center">
+        <Col span={4.5}>
           <GasFeeCard
-            title="Rapid"
-            maxFee={gasFee.rapidMaxFee.toFixed(1)}
-            priorityFee={gasFee.rapidPriorityFee.toFixed(2)}
+            title="Turbo"
+            price={gasFee.blockPrices[0].estimatedPrices[0].price.toFixed(4)}
+            maxFee={gasFee.blockPrices[0].estimatedPrices[0].maxFeePerGas.toFixed(4)}
+            priorityFee={gasFee.blockPrices[0].estimatedPrices[0].maxPriorityFeePerGas.toFixed(4)}
             time="~12 Seconds"
-            color="green"
+            color="#4CAF50"
           />
         </Col>
-        <Col span={6}>
+        <Col span={4.5}>
           <GasFeeCard
             title="Fast"
-            maxFee={gasFee.fastMaxFee.toFixed(1)}
-            priorityFee={gasFee.fastPriorityFee.toFixed(2)}
+            price={gasFee.blockPrices[0].estimatedPrices[1].price.toFixed(4)}
+            maxFee={gasFee.blockPrices[0].estimatedPrices[1].maxFeePerGas.toFixed(4)}
+            priorityFee={gasFee.blockPrices[0].estimatedPrices[1].maxPriorityFeePerGas.toFixed(4)}
             time="~48 Seconds"
-            color="orange"
+            color="#8BC34A"
           />
         </Col>
-        <Col span={6}>
+        <Col span={4.5}>
           <GasFeeCard
             title="Standard"
-            maxFee={gasFee.normalMaxFee.toFixed(1)}
-            priorityFee={gasFee.normalPriorityFee.toFixed(2)}
+            price={gasFee.blockPrices[0].estimatedPrices[2].price.toFixed(4)}
+            maxFee={gasFee.blockPrices[0].estimatedPrices[2].maxFeePerGas.toFixed(4)}
+            priorityFee={gasFee.blockPrices[0].estimatedPrices[2].maxPriorityFeePerGas.toFixed(4)}
             time="~2 Minutes"
-            color="yellow"
+            color="#FFC107"
           />
         </Col>
-        <Col span={6}>
+        <Col span={4.5}>
           <GasFeeCard
-            title="Slow"
-            maxFee={gasFee.slowMaxFee.toFixed(1)}
-            priorityFee={gasFee.slowPriorityFee.toFixed(2)}
+            title="Economy"
+            price={gasFee.blockPrices[0].estimatedPrices[3].price.toFixed(4)}
+            maxFee={gasFee.blockPrices[0].estimatedPrices[3].maxFeePerGas.toFixed(4)}
+            priorityFee={gasFee.blockPrices[0].estimatedPrices[3].maxPriorityFeePerGas.toFixed(4)}
             time="~3 Minutes"
+            color="#FF9800"
+          />
+        </Col>
+        <Col span={4.5}>
+          <GasFeeCard
+            title="Saver"
+            price={gasFee.blockPrices[0].estimatedPrices[4].price.toFixed(4)}
+            maxFee={gasFee.blockPrices[0].estimatedPrices[4].maxFeePerGas.toFixed(4)}
+            priorityFee={gasFee.blockPrices[0].estimatedPrices[4].maxPriorityFeePerGas.toFixed(4)}
+            time="~4 Minutes"
             color="red"
           />
         </Col>
       </Row>
       <Row style={{ marginTop: '20px' }} justify="center">
-        <Col span={12}>
+        <Col span={20}>
           <CurrentPriceCard priceAPI={chainPriceAPI} />
         </Col>
       </Row>

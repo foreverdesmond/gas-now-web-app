@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'antd';
-import GasFeeDashboard from './GasFeeDashboard'; // 确保路径正确
+import GasFeeDashboard from './GasFeeDashboard';
 
 const { TabPane } = Tabs;
 
@@ -18,9 +18,9 @@ const GasFeeTab = ({ chains }) => {
           }
           key={index + 1}
         >
-          <GasFeeDashboard chainName={chain.name} chainGasFeeServiceAPI={chain.gasFeeServiceAPI} chainPriceAPI={chain.priceAPI} />
+          <GasFeeDashboard chainName={chain.name} chainGasFeeServiceAPI={chain.gasFeeServiceAPI} chainPriceAPI={chain.priceAPI} chainNetworkId={chain.networkId}/>
           {/* 这里可以添加其他链特有的信息 */}
-          <div>{chain.specialInfo}</div>
+          {/*<div>{chain.specialInfo}</div>*/}
         </TabPane>
       ))}
     </Tabs>
