@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Gas Now",
+  "name": "Gas Now - Gas query tool available anytime anywhere",
   "icons": [
     {
       "src": "favicon.ico",

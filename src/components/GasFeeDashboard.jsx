@@ -1,35 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col } from 'antd';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Row, Col, Typography } from 'antd';
 import GasFeeCard from './GasFeeCard';
 import CurrentPriceCard from './CurrentPriceCard';
 import { getCurrentGasFee } from '../service/gasFeeService';
 import NetworkInfo from './NetworkInfoCard';
 
-const GasFeeDashboard = ({ chainName ,chainGasFeeServiceAPI, chainPriceAPI, chainNetworkId}) => {
+const { Title } = Typography;
+
+// 定义 API 刷新时间常量（毫秒）
+const REFRESH_INTERVAL = 6000;
+
+const GasFeeDashboard = ({ chainName, chainGasFeeServiceAPI, chainPriceAPI, chainNetworkId }) => {
   console.log("chain", chainName);
   console.log("chain.gasFeeServiceAPI", chainGasFeeServiceAPI);
   const [gasFee, setGasFee] = useState(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [lastUpdateTime, setLastUpdateTime] = useState(Date.now());
+  const [updateCounter, setUpdateCounter] = useState(0); // 添加更新计数器以确保每次更新都触发重新渲染
 
   useEffect(() => {
-    const fetchGasFee = async () => {
-      try {
-        console.log("chain.gasFeeServiceAPI", chainGasFeeServiceAPI);
-        console.log("chian.networkID",chainNetworkId);
-        const request = chainGasFeeServiceAPI+chainNetworkId;
-        const data = await getCurrentGasFee(request);
-        console.log('Fetched gas fee data:', data);
-        setGasFee(data);
-      } catch (error) {
-        console.error('Error fetching gas fee data:', error);
-      }
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
     };
 
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const fetchGasFee = useCallback(async () => {
+    try {
+      console.log("chain.gasFeeServiceAPI", chainGasFeeServiceAPI);
+      console.log("chian.networkID", chainNetworkId);
+      const request = chainGasFeeServiceAPI + chainNetworkId;
+      const data = await getCurrentGasFee(request);
+      console.log('Fetched gas fee data:', data);
+      setGasFee(data);
+      setLastUpdateTime(Date.now()); // 更新最后更新时间
+      setUpdateCounter(prev => prev + 1); // 增加更新计数器
+    } catch (error) {
+      console.error('Error fetching gas fee data:', error);
+    }
+  }, [chainGasFeeServiceAPI, chainNetworkId]);
+
+  useEffect(() => {
     fetchGasFee();
 
-    const interval = setInterval(fetchGasFee, 30000);
+    const interval = setInterval(fetchGasFee, REFRESH_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [chainGasFeeServiceAPI]);
+  }, [fetchGasFee]);
 
   if (!gasFee) {
     return <p>Loading...</p>;
@@ -37,65 +56,83 @@ const GasFeeDashboard = ({ chainName ,chainGasFeeServiceAPI, chainPriceAPI, chai
 
   const baseFee = parseFloat(gasFee.blockPrices[0].baseFeePerGas).toFixed(6);
 
+  // 根据屏幕宽度设置布局
+  const isMobile = windowWidth < 576;
+  const isTablet = windowWidth >= 576 && windowWidth < 992;
+  
+  // 设置统一的栅格间隔
+  const gutter = [16, 16];
+
+  // 获取GasFee卡片的唯一key，以确保重新渲染
+  const getCardKey = (title) => `${title.toLowerCase()}-${lastUpdateTime}-${updateCounter}`;
+
+  // 创建统一的卡片属性
+  const gasFeeCards = [
+    {
+      title: "Turbo",
+      index: 0,
+      color: "#4CAF50",
+      time: "~12 Seconds"
+    },
+    {
+      title: "Fast",
+      index: 1,
+      color: "#8BC34A",
+      time: "~48 Seconds"
+    },
+    {
+      title: "Standard",
+      index: 2,
+      color: "#FFC107",
+      time: "~2 Minutes"
+    },
+    {
+      title: "Economy",
+      index: 3,
+      color: "#FF9800",
+      time: "~3 Minutes"
+    },
+    {
+      title: "Saver",
+      index: 4,
+      color: "#FF0000",
+      time: "~4 Minutes"
+    }
+  ];
+
   return (
-    <div style={{ padding: '20px' }}>
-      <Row style={{ marginTop: '20px' }} justify="center">
-        <NetworkInfo chainName = {chainName} baseFee ={baseFee} blockNumber ={gasFee.blockPrices[0].blockNumber}/>
+    <div style={{ padding: '10px', maxWidth: '1280px', margin: '0 auto' }}>
+      <Row style={{ marginBottom: '20px' }} justify="center">
+        <NetworkInfo chainName={chainName} baseFee={baseFee} blockNumber={gasFee.blockPrices[0].blockNumber} />
       </Row>
-      <Row gutter={20} justify="center">
-        <Col span={4.5}>
-          <GasFeeCard
-            title="Turbo"
-            price={gasFee.blockPrices[0].estimatedPrices[0].price.toFixed(4)}
-            maxFee={gasFee.blockPrices[0].estimatedPrices[0].maxFeePerGas.toFixed(4)}
-            priorityFee={gasFee.blockPrices[0].estimatedPrices[0].maxPriorityFeePerGas.toFixed(4)}
-            time="~12 Seconds"
-            color="#4CAF50"
-          />
-        </Col>
-        <Col span={4.5}>
-          <GasFeeCard
-            title="Fast"
-            price={gasFee.blockPrices[0].estimatedPrices[1].price.toFixed(4)}
-            maxFee={gasFee.blockPrices[0].estimatedPrices[1].maxFeePerGas.toFixed(4)}
-            priorityFee={gasFee.blockPrices[0].estimatedPrices[1].maxPriorityFeePerGas.toFixed(4)}
-            time="~48 Seconds"
-            color="#8BC34A"
-          />
-        </Col>
-        <Col span={4.5}>
-          <GasFeeCard
-            title="Standard"
-            price={gasFee.blockPrices[0].estimatedPrices[2].price.toFixed(4)}
-            maxFee={gasFee.blockPrices[0].estimatedPrices[2].maxFeePerGas.toFixed(4)}
-            priorityFee={gasFee.blockPrices[0].estimatedPrices[2].maxPriorityFeePerGas.toFixed(4)}
-            time="~2 Minutes"
-            color="#FFC107"
-          />
-        </Col>
-        <Col span={4.5}>
-          <GasFeeCard
-            title="Economy"
-            price={gasFee.blockPrices[0].estimatedPrices[3].price.toFixed(4)}
-            maxFee={gasFee.blockPrices[0].estimatedPrices[3].maxFeePerGas.toFixed(4)}
-            priorityFee={gasFee.blockPrices[0].estimatedPrices[3].maxPriorityFeePerGas.toFixed(4)}
-            time="~3 Minutes"
-            color="#FF9800"
-          />
-        </Col>
-        <Col span={4.5}>
-          <GasFeeCard
-            title="Saver"
-            price={gasFee.blockPrices[0].estimatedPrices[4].price.toFixed(4)}
-            maxFee={gasFee.blockPrices[0].estimatedPrices[4].maxFeePerGas.toFixed(4)}
-            priorityFee={gasFee.blockPrices[0].estimatedPrices[4].maxPriorityFeePerGas.toFixed(4)}
-            time="~4 Minutes"
-            color="red"
-          />
-        </Col>
+      
+      {isMobile && 
+        <Title level={5} style={{ textAlign: 'center', marginBottom: '20px' }}>
+          {chainName} Gas 费用
+        </Title>
+      }
+      
+      {/* GasFee 卡片行 */}
+      <Row gutter={gutter} justify="center">
+        {gasFeeCards.map((card) => (
+          <Col xs={24} sm={12} md={4} lg={4} xl={4} key={getCardKey(card.title)}>
+            <GasFeeCard
+              title={card.title}
+              price={gasFee.blockPrices[0].estimatedPrices[card.index].price.toFixed(4)}
+              maxFee={gasFee.blockPrices[0].estimatedPrices[card.index].maxFeePerGas.toFixed(4)}
+              priorityFee={gasFee.blockPrices[0].estimatedPrices[card.index].maxPriorityFeePerGas.toFixed(4)}
+              time={card.time}
+              color={card.color}
+              refreshTime={REFRESH_INTERVAL}
+              key={getCardKey(card.title)}
+            />
+          </Col>
+        ))}
       </Row>
-      <Row style={{ marginTop: '20px' }} justify="center">
-        <Col span={20}>
+      
+      {/* 价格卡片行 - 使用相同的 Col 设置确保对齐 */}
+      <Row gutter={gutter} style={{ marginTop: '20px' }} justify="center">
+        <Col xs={24} sm={24} md={20} lg={20} xl={20}>
           <CurrentPriceCard priceAPI={chainPriceAPI} />
         </Col>
       </Row>
