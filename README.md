@@ -20,7 +20,8 @@ A real-time Ethereum gas fee tracking application that provides users with curre
 
 ## 🚀 Demo
 
-Visit the live application: [Coming Soon]
+Visit the live application: 
+http://www.gasnow.link:3000/
 
 ## 📦 Installation
 
