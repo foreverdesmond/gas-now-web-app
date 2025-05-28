@@ -1,70 +1,176 @@
-# Getting Started with Create React App
+# Gas Now Web App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A real-time Ethereum gas fee tracking application that provides users with current gas prices, transaction time estimates, and ETH price information across multiple blockchain networks.
 
-## Available Scripts
+## 🌟 Features
 
-In the project directory, you can run:
+- **Real-time Gas Fee Tracking**: Monitor current gas prices with 6-second refresh intervals
+- **Multiple Network Support**: Supports Ethereum, Arbitrum, Optimism, Base, Linea, and zkSync networks
+- **Visual Progress Indicators**: Gradient fill animations that sync with data refresh cycles
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Gas Fee Categories**:
+  - Turbo (~12 seconds)
+  - Fast (~48 seconds)
+  - Standard (~2 minutes)
+  - Economy (~3 minutes)
+  - Saver (~4 minutes)
+- **Current ETH Price**: Real-time ETH/USD and ETH/BTC price tracking with 12-second refresh
+- **Network Information**: Display current base fee and block number
+- **Interactive UI**: Modern card-based interface with smooth animations
 
-### `npm start`
+## 🚀 Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Visit the live application: [Coming Soon]
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📦 Installation
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v14 or higher)
+- npm or yarn
 
-### `npm run build`
+### Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone https://github.com/foreverdesmond/gas-now-web-app.git
+cd gas-now-web-app
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Install dependencies:
 
-### `npm run eject`
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. Start the development server:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🏗️ Build
 
-## Learn More
+To create a production build:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This builds the app for production to the `build` folder, optimizing the build for the best performance.
 
-### Code Splitting
+## 🎨 Key Components
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### GasFeeCard
 
-### Analyzing the Bundle Size
+- Displays gas fee information with category-specific colors
+- Features bottom-to-top gradient fill animation
+- Includes custom icons for each gas fee category
+- Responsive design for all screen sizes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### CurrentPriceCard
 
-### Making a Progressive Web App
+- Shows real-time ETH prices in USD and BTC
+- Features left-to-right gradient fill animation
+- 12-second refresh interval
+- Beautiful gradient border effects
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### NetworkInfoCard
 
-### Advanced Configuration
+- Displays current network information
+- Shows base fee and latest block number
+- Network-specific branding and colors
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+## 📱 Responsive Design
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The application is fully responsive and provides optimal viewing experience across:
 
-### `npm run build` fails to minify
+- Desktop (≥992px)
+- Tablet (576px - 991px)
+- Mobile (<576px)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🎯 API Integration
+
+### Gas Fee Service
+
+- Endpoint: `/api/GasFeeBlockNavie/currentgas?networkId={id}`
+- Refresh interval: 6 seconds
+- Provides gas price estimates for different speed categories
+
+### Price Service
+
+- Endpoint: `/api/Price/currentprice`
+- Refresh interval: 12 seconds
+- Provides current ETH/USD and ETH/BTC prices
+
+## 🛠️ Technologies Used
+
+- **React** (v17.0.2) - Frontend framework
+- **Ant Design** (v5.22.3) - UI component library
+- **Axios** (v0.21.1) - HTTP client for API requests
+- **CSS3** - Custom styling and animations
+- **React Hooks** - State management and lifecycle methods
+
+## 📊 Animation Features
+
+- **Gradient Fill Effects**: Visual progress indicators that sync with data refresh cycles
+- **Smooth Transitions**: RequestAnimationFrame-based animations for optimal performance
+- **Color-coded Categories**: Each gas fee category has distinct colors and animations
+- **Icon Integration**: Custom icons with white filter effects for dark theme compatibility
+
+## 🚀 Deployment
+
+The application can be deployed to various platforms:
+
+### Netlify
+
+1. Connect your GitHub repository
+2. Set build command: `npm run build`
+3. Set publish directory: `build`
+
+### Vercel
+
+1. Import your GitHub repository
+2. Vercel will automatically detect the React configuration
+
+### GitHub Pages
+
+1. Install gh-pages: `npm install --save-dev gh-pages`
+2. Add to package.json:
+   ```json
+   "scripts": {
+     "predeploy": "npm run build",
+     "deploy": "gh-pages -d build"
+   }
+   ```
+3. Run: `npm run deploy`
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Ethereum community for gas fee APIs
+- Ant Design team for the excellent UI components
+- React community for the robust frontend framework
+
+## 📞 Support
+
+If you encounter any issues or have questions, please [open an issue](https://github.com/foreverdesmond/gas-now-web-app/issues) on GitHub.
+
+---
+
+**Made with ❤️ for the Ethereum community**
