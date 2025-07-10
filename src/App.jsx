@@ -8,6 +8,8 @@ const { Title } = Typography;
 // 从环境变量获取API基础URL
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+console.log("API_BASE_URL", API_BASE_URL);
+
 const chains = [
   {
     name: 'ETH',

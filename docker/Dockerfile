@@ -12,6 +12,10 @@ COPY package*.json ./
 # 安装所有依赖（包括 devDependencies，构建时需要）
 RUN npm ci --silent
 
+# 设置 API URL 环境变量
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=http://104.194.88.159:6000
+
 # 复制源代码
 COPY public/ ./public/
 COPY src/ ./src/
