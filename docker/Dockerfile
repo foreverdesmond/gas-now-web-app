@@ -14,7 +14,7 @@ RUN npm ci --silent
 
 # 设置 API URL 环境变量
 ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=http://104.194.88.159:6000
+ENV REACT_APP_API_URL=http://104.194.88.159:8080
 
 # 复制源代码
 COPY public/ ./public/
