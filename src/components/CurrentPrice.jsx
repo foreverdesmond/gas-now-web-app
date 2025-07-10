@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
+// 从环境变量获取API基础URL
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function CurrentPrice() {
   const [price, setPrice] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -7,8 +10,7 @@ function CurrentPrice() {
 
   const fetchPrice = async () => {
     try {
-      const response = await fetch('http://104.194.88.159:5171/api/Price/currentprice');
-      //const response = await fetch('https://localhost:7050/api/Price/currentprice');
+      const response = await fetch(`${API_BASE_URL}/api/Price/currentprice`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
