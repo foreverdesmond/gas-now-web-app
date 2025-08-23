@@ -1,7 +1,7 @@
 # 多阶段构建 Dockerfile for React Gas Now Web App
 
 # 第一阶段：构建阶段
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 
 # 设置工作目录
 WORKDIR /app
@@ -10,7 +10,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # 安装所有依赖（包括 devDependencies，构建时需要）
-RUN npm ci --silent
+RUN npm install
 
 # 设置 API URL 环境变量
 ARG REACT_APP_API_URL
@@ -24,7 +24,7 @@ COPY src/ ./src/
 RUN npm run build
 
 # 第二阶段：运行时阶段
-FROM node:16-alpine AS production
+FROM node:18-alpine AS production
 
 # 安装 serve 用于提供静态文件服务
 RUN npm install -g serve
